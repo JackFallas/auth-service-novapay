@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.vscode/
+**/.idea/
+**/logs/
+**/keys/key-*.xml
+**/*.user
+**/*.suo
+.git/
+.gitignore
+README.md
+# Nunca copiar secretos a la imagen Docker — se inyectan en runtime vía env_file
+.env
+.env.local
+.env.*.local

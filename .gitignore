@@ -1,0 +1,34 @@
+# Build outputs
+bin/
+obj/
+
+# Runtime logs
+logs/
+*.log
+
+# Environment files with real secrets — NEVER commit these
+.env
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# ASP.NET Core Data Protection keys (generated at runtime)
+**/keys/*.xml
+
+# .NET publish output
+publish/
+out/
+
+# NuGet
+*.nupkg
+.nuget/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
