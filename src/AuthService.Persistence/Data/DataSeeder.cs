@@ -33,7 +33,10 @@ public static class DataSeeder
         }
         await context.SaveChangesAsync();
 
-        if (!await context.Users.AnyAsync())
+        var adminEmail = "admin@novapay.local";
+        var adminExists = await context.Users.AnyAsync(u => u.Email == adminEmail);
+
+        if (!adminExists)
         {
             var adminRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == RoleConstants.ADMINISTRADOR);
 
@@ -46,7 +49,7 @@ public static class DataSeeder
                     Nombre = "Admin",
                     Apellido = "NovaPay",
                     Username = "admin.novapay",
-                    Email = "admin@novapay.local",
+                    Email = adminEmail,
                     Dpi = "1234567890101",
                     Nit = "1234567890",
                     Telefono = "50000000",

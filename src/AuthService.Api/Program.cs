@@ -7,6 +7,7 @@ using Serilog;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 // Carga variables de entorno desde un archivo `.env` si existe (útil para
 // desarrollo local con `dotnet run`). En Docker las variables ya vienen del
@@ -205,7 +206,28 @@ using (var scope = app.Services.CreateScope())
     {
         logger.LogInformation("Checking database connection...");
 
+        // EnsureCreated crea el esquema base (roles, users, etc.)
         await context.Database.EnsureCreatedAsync();
+
+        // Crear tablas exclusivas del auth-service con SQL explícito para que
+        // existan aunque EnsureCreated las haya omitido por detectar tablas previas.
+        // Se ejecutan DESPUÉS de EnsureCreated para garantizar que users ya existe.
+        await context.Database.ExecuteSqlRawAsync(@"
+            CREATE TABLE IF NOT EXISTS user_emails (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                email_verified BOOLEAN NOT NULL DEFAULT FALSE,
+                email_verification_token TEXT,
+                email_verification_token_expiry TIMESTAMP WITH TIME ZONE
+            );
+
+            CREATE TABLE IF NOT EXISTS user_password_resets (
+                id SERIAL PRIMARY KEY,
+                user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                password_reset_token TEXT,
+                password_reset_token_expiry TIMESTAMP WITH TIME ZONE
+            );
+        ");
 
         logger.LogInformation("Database ready. Running seed data...");
         await DataSeeder.SeedAsync(context);

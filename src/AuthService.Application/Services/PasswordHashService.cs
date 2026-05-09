@@ -43,7 +43,14 @@ public class PasswordHashService : IPasswordHashService
         {
             Console.WriteLine($"[DEBUG] Verifying password for hash: {hashedPassword.Substring(0, Math.Min(50, hashedPassword.Length))}...");
 
-            if (hashedPassword.StartsWith("$argon2id$"))
+            if (hashedPassword.StartsWith("$2b$") || hashedPassword.StartsWith("$2a$") || hashedPassword.StartsWith("$2y$"))
+            {
+                Console.WriteLine("[DEBUG] Using BCrypt verification");
+                var result = BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+                Console.WriteLine($"[DEBUG] BCrypt verification result: {result}");
+                return result;
+            }
+            else if (hashedPassword.StartsWith("$argon2id$"))
             {
                 Console.WriteLine("[DEBUG] Using Argon2 standard format verification");
                 var result = VerifyArgon2StandardFormat(password, hashedPassword);

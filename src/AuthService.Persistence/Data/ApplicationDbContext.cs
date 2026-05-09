@@ -21,7 +21,7 @@ public class ApplicationDbContext : DbContext
         {
             entity.ToTable("roles");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasColumnName("name");
             entity.HasIndex(e => e.Name).IsUnique();
             // Sequelize genera timestamps camelCase ("createdAt", "updatedAt")
@@ -34,7 +34,7 @@ public class ApplicationDbContext : DbContext
         {
             entity.ToTable("users");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.Nombre).HasColumnName("nombre");
             entity.Property(e => e.Apellido).HasColumnName("apellido");
             entity.Property(e => e.Username).HasColumnName("username");
@@ -77,7 +77,7 @@ public class ApplicationDbContext : DbContext
         {
             entity.ToTable("user_emails");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.EmailVerified).HasColumnName("email_verified");
             entity.Property(e => e.EmailVerificationToken).HasColumnName("email_verification_token");
@@ -89,7 +89,7 @@ public class ApplicationDbContext : DbContext
         {
             entity.ToTable("user_password_resets");
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.PasswordResetToken).HasColumnName("password_reset_token");
             entity.Property(e => e.PasswordResetTokenExpiry).HasColumnName("password_reset_token_expiry");
