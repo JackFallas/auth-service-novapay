@@ -66,7 +66,26 @@ Variables críticas:
 
 ---
 
-## Levantar con Docker
+## Ejecucion local (sin Docker)
+
+```bash
+dotnet restore
+dotnet run --project src/AuthService.Api
+```
+
+Asegurate de que PostgreSQL este corriendo y que el archivo `.env` este configurado correctamente.
+
+---
+
+## Ejecucion con Docker
+
+Desde la carpeta raiz de NovaPay:
+
+```bash
+docker-compose up --build auth-service
+```
+
+O de forma individual:
 
 ```bash
 cd auth-service-novapay
@@ -75,6 +94,22 @@ docker run -p 3000:3000 --env-file .env novapay-auth-service
 ```
 
 Swagger disponible en `http://localhost:3000/swagger`.
+
+---
+
+## Errores comunes
+
+### Redireccion HTTPS (error 301/302)
+
+El auth-service redirige HTTP a HTTPS por defecto. En Docker, establece `DISABLE_HTTPS_REDIRECT: "true"` en el `docker-compose.yml` bajo el servicio `auth-service`.
+
+### Token SMTP de Gmail no funciona
+
+Google requiere una **App Password**, no la contraseña normal de Gmail. Generala en: Google Account > Security > 2-Step Verification > App Passwords.
+
+### Rate Limiting (error 429)
+
+El servicio limita a 5 requests/minuto en endpoints de auth (login, register, forgot-password). Si superas el limite, espera un minuto o reinicia el contenedor.
 
 ---
 
